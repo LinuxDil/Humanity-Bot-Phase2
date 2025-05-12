@@ -89,7 +89,7 @@ async function processToken(token, index) {
     const balance = await call("/api/rewards/balance", token, agent, "GET");
     console.log(chalk.green("💰 Hadiah saat ini:", balance.balance.total_rewards));
 
-    const rewardStatus = await call("/api/rewards/daily/check", token, agent));
+    const rewardStatus = await call("/api/rewards/daily/check", token, agent);
     console.log(chalk.bold("📊 Status:", rewardStatus.message));
 
     if (!rewardStatus.available) {
