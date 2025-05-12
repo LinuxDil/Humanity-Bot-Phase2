@@ -87,7 +87,7 @@ async function processToken(token, index) {
     console.log("✅ Dompet:", userInfo.data.ethAddress);
 
     const balance = await call("/api/rewards/balance", token, agent, "GET");
-    console.log(chalk.green("💰 Hadiah saat ini:", balance.balance.total_rewards));
+    console.log(chalk.hex('#FFA500')("💰 HP Point saat ini:", balance.balance.total_rewards));
 
     const rewardStatus = await call("/api/rewards/daily/check", token, agent);
     console.log("📊 Status:", rewardStatus.message);
@@ -101,9 +101,9 @@ async function processToken(token, index) {
     
     // Periksa data klaim yang diterima
     if (claim && claim.data && claim.data.amount) {
-        console.log("🎉 Klaim berhasil, hadiah:", claim.data.amount);
+        console.log("🎉 Klaim berhasil, HP Point:", claim.data.amount);
     } else if (claim.message && claim.message.includes('successfully claimed')) {
-        console.log("🎉 Anda telah berhasil mengklaim hadiah hari ini.");
+        console.log("🎉 Anda telah berhasil mengklaim HP Point hari ini.");
     } else {
         console.error("❌ Klaim gagal, data yang diterima tidak sesuai:", claim);
         return;  // Lewati permintaan ini dan lanjutkan ke yang berikutnya
@@ -113,9 +113,9 @@ async function processToken(token, index) {
 
     // Periksa data saldo yang diperbarui
     if (updatedBalance && updatedBalance.balance) {
-        console.log("💰 Hadiah setelah klaim:", updatedBalance.balance.total_rewards);
+        console.log(chalk.green("💰 HP Point setelah klaim:", updatedBalance.balance.total_rewards));
     } else {
-        console.error("❌ Gagal memperbarui hadiah, data yang diterima tidak sesuai:", updatedBalance);
+        console.error("❌ Gagal memperbarui HP Point, data yang diterima tidak sesuai:", updatedBalance);
     }
   } catch (err) {
     console.error("❌ Error:", err.message);
