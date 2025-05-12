@@ -90,7 +90,7 @@ async function processToken(token, index) {
     console.log(chalk.green("💰 Hadiah saat ini:", balance.balance.total_rewards));
 
     const rewardStatus = await call("/api/rewards/daily/check", token, agent);
-    console.log(chalk.bold("📊 Status:", rewardStatus.message));
+    console.log("📊 Status:", rewardStatus.message);
 
     if (!rewardStatus.available) {
       console.log("⏳ Sudah klaim hari ini, Lewati...");
@@ -124,7 +124,7 @@ async function processToken(token, index) {
 
   // Hindari permintaan terlalu cepat
   const delay = Math.floor(Math.random() * 5000) + 5000;
-  console.log(`⏳ Menunggu ${delay / 1000} detik...\n`);
+  console.log(chalk.hex('#FFA500')(`⏳ Menunggu ${delay / 1000} detik...\n`));
   await new Promise(resolve => setTimeout(resolve, delay));
 }
 
@@ -132,7 +132,7 @@ async function batchRun() {
   showBanner();
 
   while (true) {
-    console.log(chalk.bgGreen.black(`\n🚀 Memulai proses klaim massal, total ${TOKENS.length} akun...`));
+    console.log(chalk.bgGreen.black.bold(`\n🚀 Memulai proses klaim massal, total ${TOKENS.length} akun...`));
 
     for (let i = 0; i < TOKENS.length; i++) {
       await processToken(TOKENS[i], i);
@@ -149,7 +149,7 @@ async function batchRun() {
       const seconds = remainingTime % 60;
 
       const timeLeft = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-      process.stdout.write(`⏳ Menunggu ${timeLeft} sebelum dijalankan lagi...\r`);
+      process.stdout.write(`⏳ Menunggu ${timeLeft} sebelum dijalankan lagi... jika ada masalah hubungi https://t.me/airdropseeker_official\r`);
 
       remainingTime--;
 
