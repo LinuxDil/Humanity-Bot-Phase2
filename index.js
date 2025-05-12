@@ -80,17 +80,17 @@ async function processToken(token, index) {
   const agent = getRandomProxy();
 
   try {
-    console.log(chalk.cyan(`\n🔹 Memulai proses Token #${index + 1}`);
+    console.log(chalk.cyan(`\n🔹 Memulai proses Token #${index + 1}`));
 
     const userInfo = await call("/api/user/userInfo", token, agent);
     console.log("✅ Pengguna:", userInfo.data.nickName);
     console.log("✅ Dompet:", userInfo.data.ethAddress);
 
     const balance = await call("/api/rewards/balance", token, agent, "GET");
-    console.log(chalk.green("💰 Hadiah saat ini:", balance.balance.total_rewards);
+    console.log(chalk.green("💰 Hadiah saat ini:", balance.balance.total_rewards));
 
-    const rewardStatus = await call("/api/rewards/daily/check", token, agent);
-    console.log(chalk.bold("📊 Status:", rewardStatus.message);
+    const rewardStatus = await call("/api/rewards/daily/check", token, agent));
+    console.log(chalk.bold("📊 Status:", rewardStatus.message));
 
     if (!rewardStatus.available) {
       console.log("⏳ Sudah klaim hari ini, Lewati...");
@@ -132,13 +132,13 @@ async function batchRun() {
   showBanner();
 
   while (true) {
-    console.log(chalk.bgGreen.black(`\n🚀 Memulai proses klaim massal, total ${TOKENS.length} akun...`);
+    console.log(chalk.bgGreen.black(`\n🚀 Memulai proses klaim massal, total ${TOKENS.length} akun...`));
 
     for (let i = 0; i < TOKENS.length; i++) {
       await processToken(TOKENS[i], i);
     }
 
-    console.log(chalk.green(`✅ Proses putaran ini selesai, mulai countdown 6 jam...`);
+    console.log(chalk.green(`✅ Proses putaran ini selesai, mulai countdown 6 jam...`));
 
     // Hitung mundur 6 jam (6 * 60 * 60 detik = 21600 detik)
     let remainingTime = 6 * 60 * 60; // dalam detik
