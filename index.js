@@ -35,7 +35,11 @@ function logError(message) {
 }
 
 function showBanner() {
-  console.log(chalk.green(figlet.textSync("Humanity Auto Claim", { horizontalLayout: "default" })));
+  try {
+    console.log(chalk.green(figlet.textSync("Humanity Auto Claim", { horizontalLayout: "default" })));
+  } catch {
+    console.log(chalk.green("=== Humanity Auto Claim ==="));
+  }
 }
 
 async function call(endpoint, token, agent, method = "POST", body = {}) {
@@ -99,70 +103,67 @@ async function processToken(token, index) {
 
     const claim = await call("/api/rewards/daily/claim", token, agent);
     
-    // Periksa data klaim yang diterima
     if (claim && claim.data && claim.data.amount) {
-        console.log("🎉 Klaim berhasil, HP Point:", claim.data.amount);
+      console.log("🎉 Klaim berhasil, HP Point:", claim.data.amount);
     } else if (claim.message && claim.message.includes('successfully claimed')) {
-        console.log("🎉 Anda telah berhasil mengklaim HP Point hari ini.");
+      console.log("🎉 Anda telah berhasil mengklaim HP Point hari ini.");
     } else {
-        console.error("❌ Klaim gagal, data yang diterima tidak sesuai:", claim);
-        return;  // Lewati permintaan ini dan lanjutkan ke yang berikutnya
+      console.error("❌ Klaim gagal, data yang diterima tidak sesuai:", claim);
+      return;
     }
 
     const updatedBalance = await call("/api/rewards/balance", token, agent, "GET");
 
-    // Periksa data saldo yang diperbarui
     if (updatedBalance && updatedBalance.balance) {
-        console.log(chalk.green("💰 HP Point setelah klaim:", updatedBalance.balance.total_rewards));
+      console.log(chalk.green("💰 HP Point setelah klaim:", updatedBalance.balance.total_rewards));
     } else {
-        console.error("❌ Gagal memperbarui HP Point, data yang diterima tidak sesuai:", updatedBalance);
+      console.error("❌ Gagal memperbarui HP Point, data yang diterima tidak sesuai:", updatedBalance);
     }
   } catch (err) {
     console.error("❌ Error:", err.message);
     logError(`Token #${index + 1} gagal: ${err.message}`);
   }
 
-  // Hindari permintaan terlalu cepat
-  const delay = Math.floor(Math.random() * 5000) + 5000;
+  const delay = Math.floor(Math.random() * 5000) + 15000;
   console.log(chalk.hex('#FFA500')(`⏳ Menunggu ${delay / 1000} detik...\n`));
   await new Promise(resolve => setTimeout(resolve, delay));
 }
 
-async function batchRun() {
-  showBanner();
+function countdown(seconds, onFinish) {
+  let remainingTime = seconds;
 
-  while (true) {
-    console.log(chalk.bgGreen.black.bold(`\n🚀 Memulai proses klaim massal, total ${TOKENS.length} akun...`));
+  const interval = setInterval(() => {
+    const hours = Math.floor(remainingTime / 3600);
+    const minutes = Math.floor((remainingTime % 3600) / 60);
+    const seconds = remainingTime % 60;
 
-    for (let i = 0; i < TOKENS.length; i++) {
-      await processToken(TOKENS[i], i);
+    const timeLeft = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    process.stdout.write(`⏳ Menunggu ${timeLeft} sebelum dijalankan lagi... jika ada masalah hubungi https://t.me/airdropseeker_official\r`);
+
+    remainingTime--;
+
+    if (remainingTime < 0) {
+      clearInterval(interval);
+      console.log("\n⏳ Countdown selesai, memulai putaran baru...");
+      onFinish(); // lanjutkan ke putaran selanjutnya
     }
+  }, 1000);
+}
 
-    console.log(chalk.green(`✅ Proses putaran ini selesai, mulai countdown 6 jam...`));
+async function startRound() {
+  console.log(chalk.bgGreen.black.bold(`\n🚀 Memulai proses klaim massal, total ${TOKENS.length} akun...`));
 
-    // Hitung mundur 6 jam (6 * 60 * 60 detik = 21600 detik)
-    let remainingTime = 6 * 60 * 60; // dalam detik
-
-    const interval = setInterval(() => {
-      const hours = Math.floor(remainingTime / 3600);
-      const minutes = Math.floor((remainingTime % 3600) / 60);
-      const seconds = remainingTime % 60;
-
-      const timeLeft = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-      process.stdout.write(`⏳ Menunggu ${timeLeft} sebelum dijalankan lagi... jika ada masalah hubungi https://t.me/airdropseeker_official\r`);
-
-      remainingTime--;
-
-      // Jika waktu mundur selesai
-      if (remainingTime <= 0) {
-        clearInterval(interval);
-        console.log("\n⏳ Countdown selesai, memulai putaran baru...");
-      }
-    }, 1000); // Interval per detik
-
-    // Tunggu sampai countdown selesai
-    await new Promise(resolve => setTimeout(resolve, 21600 * 1000)); // Tunggu 6 jam
+  for (let i = 0; i < TOKENS.length; i++) {
+    await processToken(TOKENS[i], i);
   }
+
+  console.log(chalk.green(`✅ Proses putaran ini selesai, mulai countdown 23 jam...`));
+  countdown(23 * 60 * 60, startRound); // jalankan ulang setelah countdown selesai
+}
+
+function batchRun() {
+  showBanner();
+  startRound(); // mulai putaran pertama
 }
 
 batchRun();
