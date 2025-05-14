@@ -1,7 +1,7 @@
 {
   "name": "humanity-auto-claim",
   "version": "2.0.0",
-  "description": "Bot otomatis untuk klaim reward harian di testnet.humanity.org",
+  "description": "Bot otomatis klaim reward harian di testnet.humanity.org",
   "type": "module",
   "main": "index.js",
   "scripts": {
