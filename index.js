@@ -158,7 +158,7 @@ async function startRound() {
   }
 
   console.log(chalk.green(`✅ Proses putaran ini selesai, mulai countdown 24 jam...`));
-  countdown(24 * 60 * 60, startRound); // jalankan ulang bot setelah countdown selesai
+  countdown(24 * 60 * 60, startRound);
 }
 
 function batchRun() {
