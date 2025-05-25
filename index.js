@@ -157,7 +157,7 @@ async function startRound() {
     await processToken(TOKENS[i], i);
   }
 
-  console.log(chalk.green(`✅ Proses putaran ini selesai, mulai countdown 24 jam, Thanks bg Win...`));
+  console.log(chalk.green(`✅ Proses putaran ini selesai, mulai countdown 24 jam, Thanks bg WIN...`));
   countdown(24 * 60 * 60, startRound);
 }
 
