@@ -145,7 +145,7 @@ function countdown(seconds, onFinish) {
     if (remainingTime < 0) {
       clearInterval(interval);
       console.log("\n⏳ Countdown selesai, memulai putaran baru...");
-      onFinish(); // lanjutkan ke putaran selanjutnya
+      onFinish(); // lanjutkan ke putaran selanjutnya ya
     }
   }, 1000);
 }
